@@ -1,2 +1,2 @@
 # JsonValidatorSample
-This is a sample project to try micronaut
+This is a sample project to try micronaut.
