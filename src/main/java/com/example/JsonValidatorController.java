@@ -6,6 +6,7 @@ import io.micronaut.http.annotation.Post;
 import jakarta.inject.Inject;
 
 import javax.ws.rs.Produces;
+import java.util.Optional;
 
 @Controller("/validate")
 public class JsonValidatorController {
@@ -19,7 +20,14 @@ public class JsonValidatorController {
         if (JsonValidator.ValidationResult.VALID.equals(result.getValidationResult())) {
             return HttpResponse.ok();
         } else {
-            return HttpResponse.badRequest();
+            String httpBody = "";
+            httpBody = getErrorMessageWithTrailingLineBreak(result.getErrorMessageObject());
+            httpBody = httpBody + getErrorMessageWithTrailingLineBreak(result.getErrorMessageArray()).trim();
+            return HttpResponse.badRequest(httpBody);
         }
+    }
+
+    private String getErrorMessageWithTrailingLineBreak(Optional<String> errorMessage) {
+        return errorMessage.map(errorMessageText -> errorMessageText + "\n").orElse("");
     }
 }
